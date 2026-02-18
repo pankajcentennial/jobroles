@@ -138,7 +138,7 @@ if (isset($_POST['status'])) {
         'assigned_date' => $assigned_date
     ]);
 
-    header("Location: daily_report.php");
+    header("Location: index.php");
     exit;
 }
 if (isset($_POST['delete_assignment'])) {
@@ -159,7 +159,7 @@ if (isset($_POST['delete_assignment'])) {
         'assigned_date' => $assigned_date
     ]);
 
-    header("Location: daily_report.php");
+    header("Location: index.php");
     exit;
 }
 if (isset($_POST['update_applicants'])) {
@@ -184,7 +184,7 @@ if (isset($_POST['update_applicants'])) {
         'job_id' => $job_id
     ]);
 
-    header("Location: daily_report.php");
+    header("Location: index.php");
     exit;
 }
 $selected_date = $_POST['assigned_date'] ?? date("Y-m-d");
