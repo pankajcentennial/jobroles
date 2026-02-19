@@ -4,6 +4,23 @@ include "db.php";
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
 $base_url = $protocol . $_SERVER['HTTP_HOST'] . dirname($_SERVER['SCRIPT_NAME']) . "/";
 
+$activeJobTitleStmt = $pdo->prepare("
+    SELECT DISTINCT j.title
+    FROM assignments a
+    JOIN jobs j ON j.id = a.job_id
+    INNER JOIN (
+        SELECT job_id, MAX(id) AS latest_id
+        FROM assignments
+        GROUP BY job_id
+    ) latest
+    ON a.id = latest.latest_id
+    WHERE a.status = 2
+");
+$activeJobTitleStmt->execute();
+$activeJobTitles = $activeJobTitleStmt->fetchAll(PDO::FETCH_COLUMN);
+
+
+
 // Jobs which are ACTIVE (Posted but not Closed)
 $postedJobsStmt = $pdo->prepare("
     SELECT a.job_id
@@ -18,6 +35,23 @@ $postedJobsStmt = $pdo->prepare("
 ");
 $postedJobsStmt->execute();
 $activePostedJobIds = $postedJobsStmt->fetchAll(PDO::FETCH_COLUMN);
+
+
+/*$postedJobsStmt = $pdo->prepare("
+    SELECT DISTINCT j.jobroles_id
+    FROM assignments a
+    JOIN jobs j ON j.id = a.job_id
+    JOIN (
+        SELECT job_id, MAX(id) AS latest_id
+        FROM assignments
+        GROUP BY job_id
+    ) latest
+    ON a.id = latest.latest_id
+    WHERE a.status = 2
+");
+$postedJobsStmt->execute();
+$activeJobRoleIds = $postedJobsStmt->fetchAll(PDO::FETCH_COLUMN); */
+
 
 
 
@@ -350,20 +384,24 @@ $jobListDropdown = $jobStmt->fetchAll(PDO::FETCH_ASSOC);
 
 
                                             // Copy Button (hide if job is active posted anywhere)
+                                            $jobTitle = $row['title'];
+                                            echo $jobDate  = $row['assigned_date'];
+                                            $isFutureJob = ($date > date("Y-m-d"));
 
-
-                                            if (!in_array($jobId, $activePostedJobIds)) {
+                                            if ($isFutureJob && in_array($jobTitle, $activeJobTitles)) {
+                                                echo "<span class='text-danger fw-bold'>Already Active</span>";
+                                            } else {
                                                 echo "<button class='btn btn-sm btn-success'
-            onclick=\"copyText('" . htmlspecialchars($jobTitle, ENT_QUOTES) . "', '" . htmlspecialchars($staff['name'], ENT_QUOTES) . "')\">
-            📋
-          </button>";
-                                            }
+        onclick=\"copyText('" . htmlspecialchars($jobTitle, ENT_QUOTES) . "', '" . htmlspecialchars($staff['name'], ENT_QUOTES) . "')\">
+        📋
+    </button>";
 
 
-                                            echo "<br>";
+                                                echo "<br>";
 
-                                            // Dropdown
-                                            echo "<form method='POST' style='margin-top:5px;'>
+                                                // Dropdown
+
+                                                echo "<form method='POST' style='margin-top:5px;'>
             <input type='hidden' name='staff_id' value='$staffId'>
             <input type='hidden' name='assigned_date' value='$date'>
 
@@ -373,6 +411,7 @@ $jobListDropdown = $jobStmt->fetchAll(PDO::FETCH_ASSOC);
                 <option value='3' " . ($status == 3 ? "selected" : "") . ">Close</option>
             </select>
           </form>";
+                                            }
                                             if ($status == 1) {
                                                 echo "<form method='POST' style='margin-top:5px;'>
             <input type='hidden' name='staff_id' value='$staffId'>

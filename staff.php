@@ -1,6 +1,7 @@
 <?php
 include "db.php";
-
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
+$base_url = $protocol . $_SERVER['HTTP_HOST'] . dirname($_SERVER['SCRIPT_NAME']) . "/";
 // Insert Staff
 if (isset($_POST['add_staff'])) {
     $name = trim($_POST['name']);
