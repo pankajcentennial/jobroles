@@ -385,8 +385,8 @@ $jobListDropdown = $jobStmt->fetchAll(PDO::FETCH_ASSOC);
 
                                             // Copy Button (hide if job is active posted anywhere)
                                             $jobTitle = $row['title'];
-                                            echo $jobDate  = $row['assigned_date'];
-                                            $isFutureJob = ($date > date("Y-m-d"));
+                                            $jobDate  = $row['assigned_date'];
+                                            $isFutureJob = ($date >= date("Y-m-d"));
 
                                             if ($isFutureJob && in_array($jobTitle, $activeJobTitles)) {
                                                 echo "<span class='text-danger fw-bold'>Already Active</span>";
