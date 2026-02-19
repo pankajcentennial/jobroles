@@ -1,5 +1,9 @@
 <?php
 include "db.php";
+/*******************Base Url *************/
+$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
+$base_url = $protocol . $_SERVER['HTTP_HOST'] . dirname($_SERVER['SCRIPT_NAME']) . "/";
+
 // Jobs which are ACTIVE (Posted but not Closed)
 $postedJobsStmt = $pdo->prepare("
     SELECT a.job_id
@@ -232,7 +236,9 @@ $jobListDropdown = $jobStmt->fetchAll(PDO::FETCH_ASSOC);
     <div class="container mt-4">
 
         <h2 class="text-center mb-4">📌 Daily Job Assignment Report</h2>
-
+        <div class=""><a href="<?= $base_url ?>">Home</a></div>
+        <div class=""><a href="<?= $base_url ?>jobs"> Add Job Roles</a></div>
+        <div class=""><a href="<?= $base_url ?>staff">Add staff</a></div>
         <?= $message; ?>
 
         <!-- Assign Job Form -->
