@@ -305,6 +305,7 @@ $jobListDropdown = $jobStmt->fetchAll(PDO::FETCH_ASSOC);*/
 <head>
     <title>Daily Job Assign Report</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -413,93 +414,96 @@ $jobListDropdown = $jobStmt->fetchAll(PDO::FETCH_ASSOC);*/
                                     }
 ?>
 ">
+                                        <div class="cell-header">
+                                            <div class="action-icons">
 
-                                        <?php
-                                        $jobId = null; // default
-                                        $status = null;
-                                        $jobTitle = "";
-                                        $applicants = 0;
-                                        if (isset($assignments[$date][$staffId])) {
+                                                <?php
+                                                $jobId = null; // default
+                                                $status = null;
+                                                $jobTitle = "";
+                                                $applicants = 0;
+                                                if (isset($assignments[$date][$staffId])) {
 
-                                            $jobTitle = $assignments[$date][$staffId]['title'];
-                                            $status = (int) trim($assignments[$date][$staffId]['status']) ?? null;
+                                                    $jobTitle = $assignments[$date][$staffId]['title'];
+                                                    $status = (int) trim($assignments[$date][$staffId]['status']) ?? null;
 
-                                            // Status text
-                                            $statusText = "";
-                                            if ($status == 1) $statusText = "Ready to Post";
-                                            if ($status == 2) $statusText = "Posted";
-                                            if ($status == 3) $statusText = "Close";
-                                            if ($status !== null) {
-                                                echo "<b>" . htmlspecialchars($jobTitle) . "</b> ";
-
-                                                // Copy Button
-                                                $jobId = $assignments[$date][$staffId]['job_id'] ?? null;
+                                                    // Status text
+                                                    $statusText = "";
+                                                    if ($status == 1) $statusText = "Ready to Post";
+                                                    if ($status == 2) $statusText = "Posted";
+                                                    if ($status == 3) $statusText = "Close";
+                                                    if ($status !== null) {
 
 
-                                                // Copy Button (hide if job is active posted anywhere)
-                                                $jobTitle = $row['title'];
-                                                $jobDate  = $row['assigned_date'];
-                                                $isFutureJob = ($date >= date("Y-m-d"));
+                                                        // Copy Button
+                                                        $jobId = $assignments[$date][$staffId]['job_id'] ?? null;
 
-                                                if ($isFutureJob && in_array($jobTitle, $activeJobTitles)) {
-                                                    echo "<span class='text-danger fw-bold'>Already Active</span>";
-                                                } else {
-                                                    echo "<button class='btn btn-sm btn-success'
+
+                                                        // Copy Button (hide if job is active posted anywhere)
+                                                        $jobTitle = $row['title'];
+                                                        $jobDate  = $row['assigned_date'];
+                                                        $isFutureJob = ($date >= date("Y-m-d"));
+
+                                                        if ($isFutureJob && in_array($jobTitle, $activeJobTitles)) {
+                                                            echo "<span class='status-badge'>Already Active</span>";
+                                                        } else {
+                                                            echo "<button class='btn btn-sm btn-success icon-btn icon-copy'
         onclick=\"copyText('" . htmlspecialchars($jobTitle, ENT_QUOTES) . "', '" . htmlspecialchars($staff['name'], ENT_QUOTES) . "')\">
-        📋
+        <i class='fas fa-copy'></i>
     </button>";
-                                                    $phone = $staff["phone"];
-                                                    if (!empty($phone)) {
+                                                            $phone = $staff["phone"];
+                                                            if (!empty($phone)) {
 
-                                                        $cleanPhone = preg_replace('/[^0-9]/', '', $phone); // remove spaces etc
+                                                                $cleanPhone = preg_replace('/[^0-9]/', '', $phone); // remove spaces etc
 
-                                                        $message = $jobTitle;
+                                                                $message = $jobTitle;
 
-                                                        echo "<a target='_blank'
-        class='btn btn-sm btn-success mt-1'
+                                                                echo "<a target='_blank'
+        class='btn btn-sm btn-success mt-1 icon-btn icon-wa'
         href='https://wa.me/" . $cleanPhone . "?text=" . urlencode($message) . "'>
-        📲 WhatsApp
-    </a>";
-                                                    }
-
-                                                    echo "<br>";
-
-                                                    // Dropdown
-
-                                                    echo "<form method='POST' style='margin-top:5px;'>
+        <i class='fab fa-whatsapp'></i>
+    </a></div></div>";
+                                                            }
+                                                            echo "<span class='job-title'>" . htmlspecialchars($jobTitle) . "</span> ";
+                                                            if ($status == 1) {
+                                                                echo "<form method='POST' style='margin-top:5px;' class='remove-icon-form'>
             <input type='hidden' name='staff_id' value='$staffId'>
             <input type='hidden' name='assigned_date' value='$date'>
+            <button type='submit' name='delete_assignment' 
+                    class='remove-icon-btn'
+                    onclick=\"return confirm('Are you sure you want to remove this assignment?');\">
+                ✖
+            </button>
+          </form>";
+                                                            }
 
-            <select name='status' class='form-select form-select-sm' onchange='this.form.submit()'>
+                                                            //echo "</div>";
+
+                                                            // Dropdown
+
+                                                            echo "<form method='POST' style='margin-top:5px;'>
+            <input type='hidden' name='staff_id' value='$staffId' class='status-form'>
+            <input type='hidden' name='assigned_date' value='$date'>
+
+            <select name='status' class='status-select form-select form-select-sm' onchange='this.form.submit()'>
                 <option value='1' " . ($status == 1 ? "selected" : "") . ">Ready to Post</option>
                 <option value='2' " . ($status == 2 ? "selected" : "") . ">Posted</option>
                 <option value='3' " . ($status == 3 ? "selected" : "") . ">Close</option>
             </select>
           </form>";
+                                                        }
+                                                    }
+                                                } else {
+                                                    echo "-";
                                                 }
-                                                if ($status == 1) {
+
+                                                if ($status == 3) {
+                                                    $applicants = 0;
+                                                    if (isset($assignments[$date][$staffId]['applicants_count'])) {
+                                                        $applicants = $assignments[$date][$staffId]['applicants_count'];
+                                                    }
+
                                                     echo "<form method='POST' style='margin-top:5px;'>
-            <input type='hidden' name='staff_id' value='$staffId'>
-            <input type='hidden' name='assigned_date' value='$date'>
-            <button type='submit' name='delete_assignment' 
-                    class='btn btn-sm btn-danger w-100'
-                    onclick=\"return confirm('Are you sure you want to remove this assignment?');\">
-                ❌ Remove
-            </button>
-          </form>";
-                                                }
-                                            }
-                                        } else {
-                                            echo "-";
-                                        }
-
-                                        if ($status == 3) {
-                                            $applicants = 0;
-                                            if (isset($assignments[$date][$staffId]['applicants_count'])) {
-                                                $applicants = $assignments[$date][$staffId]['applicants_count'];
-                                            }
-
-                                            echo "<form method='POST' style='margin-top:5px;'>
         <input type='hidden' name='staff_id' value='$staffId'>
         <input type='hidden' name='assigned_date' value='$date'>
         <input type='hidden' name='job_id' value='$jobId'>
@@ -513,8 +517,8 @@ $jobListDropdown = $jobStmt->fetchAll(PDO::FETCH_ASSOC);*/
             Update
         </button>
       </form>";
-                                        }
-                                        ?>
+                                                }
+                                                ?>
 
                                     </td>
 
