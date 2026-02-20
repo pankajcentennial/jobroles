@@ -3,6 +3,10 @@ include "db.php";
 /*******************Base Url *************/
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
 $base_url = $protocol . $_SERVER['HTTP_HOST'] . dirname($_SERVER['SCRIPT_NAME']) . "/";
+/*******Export in CSV *******/
+
+
+
 
 $activeJobTitleStmt = $pdo->prepare("
     SELECT DISTINCT j.title
@@ -240,19 +244,49 @@ $staffStmt = $pdo->prepare("
 $staffStmt->execute(['assigned_date' => $selected_date]);
 $staffListDropdown = $staffStmt->fetchAll(PDO::FETCH_ASSOC);
 
+$selected_staff_id = isset($_POST['staff_id']) && $_POST['staff_id'] !== "" ? (int)$_POST['staff_id'] : null;
+
+
+if ($selected_staff_id !== null) {
+    $jobStmt = $pdo->prepare("
+        SELECT *
+        FROM jobs
+        WHERE id NOT IN (
+            SELECT job_id
+            FROM assignments
+            WHERE staff_id = :staff_id
+            AND status IN (2,3)
+            AND assigned_date >= CURRENT_DATE - INTERVAL '8 days'
+        )
+        ORDER BY title ASC
+    ");
+    $jobStmt->execute(['staff_id' => $selected_staff_id]);
+} else {
+
+    $jobStmt = $pdo->prepare("SELECT * FROM jobs ORDER BY title ASC");
+    $jobStmt->execute();
+}
+
+$jobListDropdown = $jobStmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+/*
 $jobStmt = $pdo->prepare("
     SELECT *
     FROM jobs
     WHERE id NOT IN (
         SELECT job_id
         FROM assignments
-        WHERE assigned_date = :assigned_date
-        AND status IN (1,2)
+        WHERE staff_id = :staff_id
+        AND status IN (2,3)
+        AND assigned_date >= CURRENT_DATE - INTERVAL '8 days'
     )
     ORDER BY title ASC
 ");
-$jobStmt->execute(['assigned_date' => $selected_date]);
-$jobListDropdown = $jobStmt->fetchAll(PDO::FETCH_ASSOC);
+$jobStmt->execute(['staff_id' => $selected_staff_id]);
+$jobListDropdown = $jobStmt->fetchAll(PDO::FETCH_ASSOC);*/
+
+
 
 
 ?>
@@ -273,6 +307,8 @@ $jobListDropdown = $jobStmt->fetchAll(PDO::FETCH_ASSOC);
         <div class=""><a href="<?= $base_url ?>">Home</a></div>
         <div class=""><a href="<?= $base_url ?>jobs"> Add Job Roles</a></div>
         <div class=""><a href="<?= $base_url ?>staff">Add staff</a></div>
+        <div class=""><a href="<?= $base_url ?>exportrecords?download=1">Export Records</a></div>
+
         <?= $message; ?>
 
         <!-- Assign Job Form -->
@@ -292,14 +328,16 @@ $jobListDropdown = $jobStmt->fetchAll(PDO::FETCH_ASSOC);
 
                         <div class="col-md-4">
                             <label class="form-label">Select Staff</label>
-                            <select name="staff_id" class="form-control" required>
+                            <select name="staff_id" class="form-control" onchange="this.form.submit()" required>
                                 <option value="">-- Select Staff --</option>
-                                <?php foreach ($staffListDropdown  as $staff): ?>
-                                    <option value="<?= $staff['id'] ?>">
+                                <?php foreach ($staffListDropdown as $staff): ?>
+                                    <option value="<?= $staff['id'] ?>"
+                                        <?= (!empty($_POST['staff_id']) && $_POST['staff_id'] == $staff['id']) ? "selected" : "" ?>>
                                         <?= htmlspecialchars($staff['name']) ?>
                                     </option>
                                 <?php endforeach; ?>
                             </select>
+
                         </div>
 
                         <div class="col-md-4">
@@ -395,7 +433,19 @@ $jobListDropdown = $jobStmt->fetchAll(PDO::FETCH_ASSOC);
         onclick=\"copyText('" . htmlspecialchars($jobTitle, ENT_QUOTES) . "', '" . htmlspecialchars($staff['name'], ENT_QUOTES) . "')\">
         📋
     </button>";
+                                                $phone = $staff["phone"];
+                                                if (!empty($phone)) {
 
+                                                    $cleanPhone = preg_replace('/[^0-9]/', '', $phone); // remove spaces etc
+
+                                                    $message = $jobTitle;
+
+                                                    echo "<a target='_blank'
+        class='btn btn-sm btn-success mt-1'
+        href='https://wa.me/" . $cleanPhone . "?text=" . urlencode($message) . "'>
+        📲 WhatsApp
+    </a>";
+                                                }
 
                                                 echo "<br>";
 

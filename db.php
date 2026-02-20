@@ -20,12 +20,11 @@ try {
     $dsn = "pgsql:host=$host;port=$port;dbname=$dbname;sslmode=require";
 
     $pdo = new PDO($dsn, $user, $pass, [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
+        PDO::ATTR_EMULATE_PREPARES => true
     ]);
 
     //echo "PostgreSQL Connected Successfully!";
 } catch (PDOException $e) {
     die("Connection failed: " . $e->getMessage());
 }
-
-?>

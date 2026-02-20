@@ -5,10 +5,15 @@ $base_url = $protocol . $_SERVER['HTTP_HOST'] . dirname($_SERVER['SCRIPT_NAME'])
 // Insert Staff
 if (isset($_POST['add_staff'])) {
     $name = trim($_POST['name']);
+    $name  = trim($_POST['name']);
+    $phone = trim($_POST['phone']);
 
     if (!empty($name)) {
-        $stmt = $pdo->prepare("INSERT INTO staff (name) VALUES (:name)");
-        $stmt->execute(['name' => $name]);
+        $stmt = $pdo->prepare("INSERT INTO staff (name, phone) VALUES (:name, :phone)");
+        $stmt->execute([
+            'name'  => $name,
+            'phone' => $phone
+        ]);
         header("Location: staff.php");
         exit;
     }
@@ -18,12 +23,14 @@ if (isset($_POST['add_staff'])) {
 if (isset($_POST['update_staff'])) {
     $id = $_POST['id'];
     $name = trim($_POST['name']);
+    $phone = trim($_POST['phone']);
 
     if (!empty($name)) {
-        $stmt = $pdo->prepare("UPDATE staff SET name = :name WHERE id = :id");
+        $stmt = $pdo->prepare("UPDATE staff SET name = :name, phone = :phone WHERE id = :id");
         $stmt->execute([
-            'name' => $name,
-            'id' => $id
+            'name'  => $name,
+            'phone' => $phone,
+            'id'    => $id
         ]);
         header("Location: staff.php");
         exit;
@@ -83,13 +90,18 @@ if (isset($_GET['edit'])) {
                 <form method="POST">
                     <div class="row g-3">
 
-                        <div class="col-md-8">
+                        <div class="col-md-4">
                             <input type="text" name="name" class="form-control"
                                 placeholder="Enter staff name"
                                 value="<?= $editStaff['name'] ?? '' ?>" required>
                         </div>
-
                         <div class="col-md-4">
+                            <input type="text" name="phone" class="form-control"
+                                placeholder="Enter phone number"
+                                value=" <?= htmlspecialchars($editStaff['phone'] ?? '') ?>"" required>
+                        </div>
+
+                        <div class=" col-md-4">
                             <?php if ($editStaff): ?>
                                 <input type="hidden" name="id" value="<?= $editStaff['id'] ?>">
                                 <button type="submit" name="update_staff" class="btn btn-warning w-100">
@@ -119,6 +131,7 @@ if (isset($_GET['edit'])) {
                         <tr>
                             <th>ID</th>
                             <th>Staff Name</th>
+                            <th>Phone</th>
                             <th width="200">Action</th>
                         </tr>
                     </thead>
@@ -129,6 +142,7 @@ if (isset($_GET['edit'])) {
                                 <tr>
                                     <td><?= $staff['id'] ?></td>
                                     <td><?= htmlspecialchars($staff['name']) ?></td>
+                                    <td><?= htmlspecialchars((string)($staff['phone'] ?? '')) ?></td>
                                     <td>
                                         <a href="staff.php?edit=<?= $staff['id'] ?>" class="btn btn-sm btn-success">
                                             Edit
