@@ -1,9 +1,16 @@
 <?php
 include "db.php";
 /*******************Base Url *************/
-$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
-$dir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
-$base_url = $protocol . $_SERVER['HTTP_HOST'] . ($dir ? $dir . '/' : '/');
+$env_base_url = getenv('BASE_URL');
+
+// If environment variable exists, use it; otherwise calculate dynamically
+if (!empty($env_base_url)) {
+    $base_url = rtrim($env_base_url, '/') . '/';
+} else {
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
+    $dir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+    $base_url = $protocol . $_SERVER['HTTP_HOST'] . ($dir ? $dir . '/' : '/');
+}
 /*******Export in CSV *******/
 
 
