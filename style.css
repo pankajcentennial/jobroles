@@ -1,1 +1,215 @@
+/* ========== RESET ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', sans-serif;
+}
 
+/* ========== ROOT COLORS ========== */
+:root {
+    --primary: #2563eb;
+    --primary-dark: #1e40af;
+    --bg: #f1f5f9;
+    --card: #ffffff;
+    --text: #1e293b;
+}
+
+body {
+    background: var(--bg);
+    color: var(--text);
+    transition: 0.3s ease;
+}
+
+/* ========== DARK MODE ========== */
+body.dark {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: #f1f5f9;
+}
+
+/* ========== TOP NAVBAR ========== */
+.top-navbar {
+    background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+    color: white;
+    padding: 15px 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.nav-links {
+    display: flex;
+    gap: 25px;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 6px 10px;
+    border-radius: 6px;
+    transition: 0.3s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    background: rgba(255,255,255,0.2);
+}
+
+.nav-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.nav-right button {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    background: white;
+    color: var(--primary-dark);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.profile {
+    font-weight: 600;
+}
+
+/* ========== MAIN CONTENT ========== */
+.main-content {
+    padding: 30px;
+}
+
+.page-title {
+    margin-bottom: 20px;
+}
+
+/* ========== CARD ========== */
+.card {
+    background: var(--card);
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    margin-bottom: 30px;
+    transition: 0.3s;
+}
+
+/* ========== FORM GRID ========== */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+    gap: 20px;
+    align-items: end;
+}
+
+.form-grid label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+.form-grid input,
+.form-grid select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    outline: none;
+}
+
+.form-grid input:focus,
+.form-grid select:focus {
+    border-color: var(--primary);
+}
+
+/* ========== BUTTON ========== */
+.btn-primary {
+    padding: 10px;
+    background: var(--primary);
+    border: none;
+    border-radius: 6px;
+    color: white;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+}
+
+/* ========== TABLE ========== */
+.table-wrapper {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 14px;
+    text-align: center;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+th {
+    background: var(--primary);
+    color: white;
+}
+
+tr:hover {
+    background: rgba(37,99,235,0.08);
+}
+
+/* STATUS COLORS */
+.ready {
+    background: #fef3c7;
+}
+
+.posted {
+    background: #d1fae5;
+}
+
+.close {
+    background: #fee2e2;
+}
+
+/* ========== ANIMATION ========== */
+.fade-in {
+    animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ========== RESPONSIVE ========== */
+@media(max-width: 768px) {
+
+    .top-navbar {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .nav-links {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+}

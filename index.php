@@ -2,7 +2,8 @@
 include "db.php";
 /*******************Base Url *************/
 $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? "https://" : "http://";
-echo $base_url = $protocol . $_SERVER['HTTP_HOST'] . dirname($_SERVER['SCRIPT_NAME']) . "/";
+$dir = rtrim(dirname($_SERVER['SCRIPT_NAME']), '/\\');
+$base_url = $protocol . $_SERVER['HTTP_HOST'] . ($dir ? $dir . '/' : '/');
 /*******Export in CSV *******/
 
 
@@ -292,7 +293,7 @@ $jobListDropdown = $jobStmt->fetchAll(PDO::FETCH_ASSOC);*/
 ?>
 
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
     <title>Daily Job Assign Report</title>
@@ -300,68 +301,75 @@ $jobListDropdown = $jobStmt->fetchAll(PDO::FETCH_ASSOC);*/
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="bg-light">
-    <div class="container mt-4">
-
-        <h2 class="text-center mb-4">📌 Daily Job Assignment Report</h2>
-        <div class=""><a href="<?= $base_url ?>">Home</a></div>
-        <div class=""><a href="<?= $base_url ?>jobs"> Add Job Roles</a></div>
-        <div class=""><a href="<?= $base_url ?>staff">Add staff</a></div>
-        <div class=""><a href="<?= $base_url ?>exportrecords?download=1">Export Records</a></div>
-
-        <?= $message; ?>
-
-        <!-- Assign Job Form -->
-        <div class="card shadow mb-4">
-            <div class="card-header bg-dark text-white">
-                Assign Job (Dropdown)
-            </div>
-
-            <div class="card-body">
-                <form method="POST">
-                    <div class="row g-3">
-
-                        <div class="col-md-4">
-                            <label class="form-label">Select Date</label>
-                            <input type="date" name="assigned_date" class="form-control" value="<?= $today ?>" required>
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Select Staff</label>
-                            <select name="staff_id" class="form-control" onchange="this.form.submit()" required>
-                                <option value="">-- Select Staff --</option>
-                                <?php foreach ($staffListDropdown as $staff): ?>
-                                    <option value="<?= $staff['id'] ?>"
-                                        <?= (!empty($_POST['staff_id']) && $_POST['staff_id'] == $staff['id']) ? "selected" : "" ?>>
-                                        <?= htmlspecialchars($staff['name']) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-
-                        </div>
-
-                        <div class="col-md-4">
-                            <label class="form-label">Select Job Title</label>
-                            <select name="job_id" class="form-control" required>
-                                <option value="">-- Select Job --</option>
-                                <?php foreach ($jobListDropdown  as $job): ?>
-                                    <option value="<?= $job['id'] ?>">
-                                        <?= htmlspecialchars($job['title']) ?>
-                                    </option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-
-                        <div class="col-md-12 text-center">
-                            <button type="submit" name="assign_job" class="btn btn-primary px-5 mt-2">
-                                Assign Job
-                            </button>
-                        </div>
-
-                    </div>
-                </form>
-            </div>
+<body>
+    <!-- TOP NAVBAR -->
+    <header class="top-navbar">
+        <div class="logo">⚡ AdminPanel</div>
+        <nav class="nav-links">
+            <a href="<?= $base_url ?>">🏠 Home</a>
+            <a href="<?= $base_url ?>jobs"> 📌 Add Job Roles</a>
+            <a href="<?= $base_url ?>staff">👥 Add Staff</a>
+            <a href="<?= $base_url ?>exportrecords?download=1">⚙ Settings</a>
+        </nav>
+        <div class="nav-right">
+            <button id="darkToggle">🌙 Dark Mode</button>
+            <div class="profile">👩 Admin</div>
         </div>
+    </header>
+    <?= $message; ?>
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <!-- Assign Job Form -->
+
+        <div class="page-title">
+            <h2>Daily Job Assignment</h2>
+        </div>
+
+        <div class="card fade-in">
+            <h2>Assign Job</h2>
+            <form method="POST" class="form-grid">
+
+
+                <div>
+                    <label>Select Date</label>
+                    <input type="date" name="assigned_date" class="form-control" value="<?= $today ?>" required>
+                </div>
+
+                <div>
+                    <label>Select Staff</label>
+                    <select name="staff_id" class="form-control" onchange="this.form.submit()" required>
+                        <option value="">-- Select Staff --</option>
+                        <?php foreach ($staffListDropdown as $staff): ?>
+                            <option value="<?= $staff['id'] ?>"
+                                <?= (!empty($_POST['staff_id']) && $_POST['staff_id'] == $staff['id']) ? "selected" : "" ?>>
+                                <?= htmlspecialchars($staff['name']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+
+                </div>
+
+                <div>
+                    <label>Select Jobrole</label>
+                    <select name="job_id" class="form-control" required>
+                        <option value="">-- Select Job --</option>
+                        <?php foreach ($jobListDropdown  as $job): ?>
+                            <option value="<?= $job['id'] ?>">
+                                <?= htmlspecialchars($job['title']) ?>
+                            </option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+
+                <button type="submit" name="assign_job" class="btn btn-primary px-5 mt-2">
+                    Assign Job
+                </button>
+
+
+            </form>
+        </div>
+
 
         <!-- Pivot Table Report -->
         <div class="table-responsive bg-white p-3 rounded shadow">
@@ -516,6 +524,7 @@ $jobListDropdown = $jobStmt->fetchAll(PDO::FETCH_ASSOC);*/
         </div>
 
     </div>
+
     <script>
         function copyText(jobTitle, staffName) {
             navigator.clipboard.writeText(jobTitle).then(() => {
