@@ -1,10 +1,5 @@
 RewriteEngine On
 
-# Remove .php extension from URL first
+# Remove .php extension from URL
 RewriteCond %{REQUEST_FILENAME}.php -f
 RewriteRule ^(.+?)/?$ $1.php [L]
-
-# Then force HTTPS (do not loop)
-RewriteCond %{HTTPS} off [OR]
-RewriteCond %{HTTP:X-Forwarded-Proto} !https
-RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
