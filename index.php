@@ -440,7 +440,7 @@ $jobListDropdown = $jobStmt->fetchAll(PDO::FETCH_ASSOC);*/
 
 
                                                         // Copy Button (hide if job is active posted anywhere)
-                                                        $jobTitle = $row['title'];
+                                                        //$jobTitle = $row['title'];
                                                         $jobDate  = $row['assigned_date'];
                                                         $isFutureJob = ($date >= date("Y-m-d"));
 
