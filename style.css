@@ -221,7 +221,7 @@ td {
     text-align: center;
     font-size: 0.85rem;
     background-color: var(--card);
-    position: relative; /* Added for absolute positioning of delete icon */
+    position: relative;
 }
 
 /* Date cell with line breaks */
@@ -275,12 +275,12 @@ td.status-empty {
 /* Already Active cell content */
 .already-content {
     display: flex;
-    flex-direction: column; /* Stack items vertically */
+    flex-direction: column;
     align-items: center;
     justify-content: flex-start;
     gap: 5px;
     width: 100%;
-    padding-top: 20px; /* Add space at top for delete icon */
+    padding-top: 20px;
 }
 
 .already-content .job-title {
@@ -417,27 +417,72 @@ td.status-empty {
     text-align: center;
 }
 
-/* ========== APPLICANTS INPUT SECTION ========== */
-.applicants-form {
+/* ========== APPLICANTS INPUT SECTION - UPDATED ========== */
+/* Main container for the applicants section */
+.applicants-section {
     margin-top: 10px;
     border-top: 1px dashed var(--border);
     padding-top: 8px;
-    text-align: center;
+    width: 100%;
 }
 
+/* Form styling - make it block level */
+.applicants-form {
+    display: block;
+    width: 100%;
+}
+
+/* Row container for input and button */
+.applicants-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    width: 100%;
+}
+
+/* Input field styling */
 .applicants-input {
     font-size: 0.7rem;
     padding: 4px 6px;
     border-radius: 15px;
     border: 1px solid var(--border);
-    width: 70px;
+    width: 60px;
     text-align: center;
     background: var(--card);
     color: var(--text);
-    margin: 0 auto;
-    display: inline-block;
+    height: 28px;
 }
 
+/* Remove spinner arrows for number input */
+.applicants-input::-webkit-inner-spin-button,
+.applicants-input::-webkit-outer-spin-button {
+    opacity: 0.5;
+    height: 20px;
+}
+
+/* Update button styling */
+.btn-update {
+    font-size: 0.65rem;
+    padding: 4px 8px;
+    background: var(--gray);
+    color: white;
+    border: none;
+    border-radius: 15px;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+    min-width: 50px;
+    height: 28px;
+    line-height: 1;
+    font-weight: 500;
+}
+
+.btn-update:hover {
+    background: var(--text);
+}
+
+/* Keep the original btn-dark class for backward compatibility */
 .btn-dark {
     font-size: 0.65rem;
     padding: 4px 8px;
@@ -446,11 +491,12 @@ td.status-empty {
     border: none;
     border-radius: 15px;
     cursor: pointer;
-    margin-top: 5px;
-    width: auto;
-    min-width: 80px;
     transition: background 0.2s;
-    display: inline-block;
+    white-space: nowrap;
+    min-width: 50px;
+    height: 28px;
+    line-height: 1;
+    font-weight: 500;
 }
 
 .btn-dark:hover {
@@ -528,5 +574,20 @@ td.status-empty {
     
     td {
         padding: 10px 5px;
+    }
+    
+    /* Adjust for mobile */
+    .applicants-row {
+        flex-direction: row;
+        flex-wrap: wrap;
+    }
+    
+    .applicants-input {
+        width: 50px;
+    }
+    
+    .btn-update, .btn-dark {
+        min-width: 45px;
+        padding: 4px 5px;
     }
 }

@@ -16,20 +16,20 @@ if (!empty($env_base_url)) {
 
 
 
+
 $activeJobTitleStmt = $pdo->prepare("
     SELECT DISTINCT j.title
-    FROM assignments a
-    JOIN jobs j ON j.id = a.job_id
-    INNER JOIN (
-        SELECT job_id, MAX(id) AS latest_id
-        FROM assignments
-        GROUP BY job_id
-    ) latest
-    ON a.id = latest.latest_id
+    FROM jobs j
+    JOIN assignments a ON j.id = a.job_id
     WHERE a.status = 2
 ");
 $activeJobTitleStmt->execute();
+
 $activeJobTitles = $activeJobTitleStmt->fetchAll(PDO::FETCH_COLUMN);
+
+
+
+
 
 
 
@@ -440,11 +440,22 @@ $jobListDropdown = $jobStmt->fetchAll(PDO::FETCH_ASSOC);*/
 
 
                                                         // Copy Button (hide if job is active posted anywhere)
-                                                        //$jobTitle = $row['title'];
+                                                        //$jobTitles = $row['title'];
                                                         $jobDate  = $row['assigned_date'];
                                                         $isFutureJob = ($date >= date("Y-m-d"));
 
                                                         if ($isFutureJob && in_array($jobTitle, $activeJobTitles)) {
+                                                            echo "<div class='already-content'><span class='job-title'>" . htmlspecialchars($jobTitle) . "</span> ";
+
+                                                            echo "<form method='POST' style='margin-top:5px;' class='remove-icon-form'>
+            <input type='hidden' name='staff_id' value='$staffId'>
+            <input type='hidden' name='assigned_date' value='$date'>
+            <button type='submit' name='delete_assignment' 
+                    class='remove-icon-btn'
+                    onclick=\"return confirm('Are you sure you want to remove this assignment?');\">
+                ✖
+            </button>
+          </form></div>";
                                                             echo "<span class='status-badge'>Already Active</span>";
                                                         } else {
                                                             echo "<button class='btn btn-sm btn-success icon-btn icon-copy'
@@ -503,20 +514,21 @@ $jobListDropdown = $jobStmt->fetchAll(PDO::FETCH_ASSOC);*/
                                                         $applicants = $assignments[$date][$staffId]['applicants_count'];
                                                     }
 
-                                                    echo "<form method='POST' style='margin-top:5px;'>
+                                                    echo "<div class='applicants-section'><form method='POST' class='applicants-form'>
         <input type='hidden' name='staff_id' value='$staffId'>
         <input type='hidden' name='assigned_date' value='$date'>
         <input type='hidden' name='job_id' value='$jobId'>
-
+        <div class='applicants-row'>
         <input type='number' name='applicants_count' value='$applicants'
-               class='form-control form-control-sm'
+               class='applicants-input'
                min='0' placeholder='Applicants'>
 
         <button type='submit' name='update_applicants'
-                class='btn btn-sm btn-dark w-100 mt-1'>
+                class='btn-update'>
             Update
         </button>
-      </form>";
+        </div
+      </form></div>";
                                                 }
                                                 ?>
 
