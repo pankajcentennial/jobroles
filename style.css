@@ -216,7 +216,7 @@ th {
 
 td {
     padding: 12px 8px;
-    border-bottom: 1px solid var(--border);
+    border: 2px dotted #0f172a;
     vertical-align: top;
     text-align: center;
     font-size: 0.85rem;
@@ -574,6 +574,7 @@ td.status-empty {
     
     td {
         padding: 10px 5px;
+        border: #0f172a dotted solid 2px;
     }
     
     /* Adjust for mobile */

@@ -408,9 +408,9 @@ $jobListDropdown = $jobStmt->fetchAll(PDO::FETCH_ASSOC);*/
                                     if (isset($assignments[$date][$staffId])) {
                                         $status = $assignments[$date][$staffId]['status'];
 
-                                        if ($status == 1) echo 'background-color:yellow;';
-                                        if ($status == 2) echo 'background-color:lightgreen;';
-                                        if ($status == 3) echo 'background-color:#ff9999;';
+                                        if ($status == 1) echo 'background-color:var(--warning-light);';
+                                        if ($status == 2) echo 'background-color:var(--success-light);';
+                                        if ($status == 3) echo 'background-color:var(--danger-light);';
                                     }
 ?>
 ">
@@ -445,7 +445,7 @@ $jobListDropdown = $jobStmt->fetchAll(PDO::FETCH_ASSOC);*/
                                                         $isFutureJob = ($date >= date("Y-m-d"));
 
                                                         if ($isFutureJob && in_array($jobTitle, $activeJobTitles)) {
-                                                            echo "<div class='already-content'><span class='job-title'>" . htmlspecialchars($jobTitle) . "</span> ";
+                                                            echo "<span class='job-title'>" . htmlspecialchars($jobTitle) . "</span> ";
 
                                                             echo "<form method='POST' style='margin-top:5px;' class='remove-icon-form'>
             <input type='hidden' name='staff_id' value='$staffId'>
@@ -455,7 +455,7 @@ $jobListDropdown = $jobStmt->fetchAll(PDO::FETCH_ASSOC);*/
                     onclick=\"return confirm('Are you sure you want to remove this assignment?');\">
                 ✖
             </button>
-          </form></div>";
+          </form>";
                                                             echo "<span class='status-badge'>Already Active</span>";
                                                         } else {
                                                             echo "<button class='btn btn-sm btn-success icon-btn icon-copy'
