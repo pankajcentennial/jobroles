@@ -299,6 +299,7 @@ td.status-empty {
     margin: 0 auto 8px;
     font-weight: 500;
     text-align: center;
+    color: #b91c1c;
 }
 
 /* Status badge colors */
@@ -370,25 +371,30 @@ td.status-empty {
 
 /* ========== REMOVE ICON - Top Right Position ========== */
 .remove-icon-form {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    margin: 0;
-    line-height: 1;
-    z-index: 2;
+   
+    font-size: 0.7rem;
+    
+    padding: 3px 10px;
+    border-radius: 20px;
+    display: inline-block;
+    color: var(--text);
+    margin: 0 auto 8px;
+    font-weight: 500;
+    text-align: center;
+    color: #b91c1c;
 }
 
 .remove-icon-btn {
-    background: none;
-    border: none;
-    color: var(--danger);
-    font-size: 1.3rem;
-    font-weight: bold;
-    cursor: pointer;
-    padding: 0;
-    line-height: 1;
+    font-size: 0.7rem;
+    
+    padding: 3px 10px;
+    border-radius: 20px;
     display: inline-block;
-    transition: all 0.2s;
+    color: var(--text);
+    margin: 0 auto 8px;
+    font-weight: 500;
+    text-align: center;
+    color: #b91c1c;
 }
 
 .remove-icon-btn:hover {
