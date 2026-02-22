@@ -65,15 +65,29 @@ if (isset($_GET['edit'])) {
 <head>
     <title>Job Roles Management</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="bg-light">
+<body>
+    <header class="top-navbar">
+        <div class="logo">⚡ AdminPanel</div>
+        <nav class="nav-links">
+            <a href="https://job.centennialinfotech.com/">🏠 Home</a>
+            <a href="https://job.centennialinfotech.com/jobs"> 📌 Add Job Roles</a>
+            <a href="https://job.centennialinfotech.com/staff">👥 Add Staff</a>
+            <a href="https://job.centennialinfotech.com/exportrecords?download=1">⚙ Settings</a>
+        </nav>
+        <div class="nav-right">
+            <button id="darkToggle">🌙 Dark Mode</button>
+            <div class="profile">👩 Admin</div>
+        </div>
+    </header>
     <div class="container mt-4">
+        <div class="page-title">
+            <h2>Add Jobroles</h2>
+        </div>
 
-        <h2 class="text-center mb-4">💼 Job Roles Management</h2>
-        <div class=""><a href="<?= $base_url ?>">Home</a></div>
-        <div class=""><a href="<?= $base_url ?>jobs"> Add Job Roles</a></div>
-        <div class=""><a href="<?= $base_url ?>staff">Add staff</a></div>
 
         <!-- Add / Update Form -->
         <div class="card shadow mb-4">
@@ -116,7 +130,7 @@ if (isset($_GET['edit'])) {
             </div>
 
             <div class="card-body table-responsive">
-                <table class="table table-bordered table-striped table-hover">
+                <table class="staff_list_table table table-bordered table-striped table-hover">
                     <thead class="table-dark">
                         <tr>
                             <th>ID</th>

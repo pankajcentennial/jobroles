@@ -74,13 +74,26 @@ if (isset($_GET['edit'])) {
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body class="bg-light">
-    <div class="container mt-4">
+<body>
 
-        <h2 class="text-center mb-4">👨‍💼 Staff Management</h2>
-        <div class=""><a href="<?= $base_url ?>">Home</a></div>
-        <div class=""><a href="<?= $base_url ?>jobs"> Add Job Roles</a></div>
-        <div class=""><a href="<?= $base_url ?>staff">Add staff</a></div>
+    <header class="top-navbar">
+        <div class="logo">⚡ AdminPanel</div>
+        <nav class="nav-links">
+            <a href="https://job.centennialinfotech.com/">🏠 Home</a>
+            <a href="https://job.centennialinfotech.com/jobs"> 📌 Add Job Roles</a>
+            <a href="https://job.centennialinfotech.com/staff">👥 Add Staff</a>
+            <a href="https://job.centennialinfotech.com/exportrecords?download=1">⚙ Settings</a>
+        </nav>
+        <div class="nav-right">
+            <button id="darkToggle">🌙 Dark Mode</button>
+            <div class="profile">👩 Admin</div>
+        </div>
+    </header>
+    <div class="main-content">
+        <div class="page-title">
+            <h2>Add Staff Member</h2>
+        </div>
+
 
         <!-- Add / Update Form -->
         <div class="card shadow mb-4">
@@ -129,7 +142,7 @@ if (isset($_GET['edit'])) {
             </div>
 
             <div class="card-body table-responsive">
-                <table class="table table-bordered table-striped table-hover">
+                <table class="staff_list_table table table-bordered table-striped table-hover">
                     <thead class="table-dark">
                         <tr>
                             <th>ID</th>
