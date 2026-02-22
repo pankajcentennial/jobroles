@@ -598,3 +598,7 @@ td.status-empty {
         padding: 4px 5px;
     }
 }
+.addphone_rules{
+    font-size: 12px;
+    color: red;
+}

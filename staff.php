@@ -99,6 +99,7 @@ if (isset($_GET['edit'])) {
                             <input type="text" name="phone" class="form-control"
                                 placeholder="Enter phone number"
                                 value="<?= $editStaff['phone'] ?? '' ?>" required>
+                            <span class="addphone_rules">Do not add +91 or 91 and number should be without space</span>
                         </div>
 
                         <div class=" col-md-4">
