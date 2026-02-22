@@ -98,7 +98,7 @@ if (isset($_GET['edit'])) {
                         <div class="col-md-4">
                             <input type="text" name="phone" class="form-control"
                                 placeholder="Enter phone number"
-                                value=" <?= htmlspecialchars($editStaff['phone'] ?? '') ?>"" required>
+                                value="<?= $editStaff['phone'] ?? '' ?>" required>
                         </div>
 
                         <div class=" col-md-4">
